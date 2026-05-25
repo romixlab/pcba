@@ -1,0 +1,13 @@
+sexpr = { s ~ expr* ~ e }
+expr = { number | symbol | string | sexpr }
+
+number = ${ ("+" | "-")? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }
+symbol = @{ (ASCII_ALPHA | ASCII_DIGIT | "_" | "&")+ }
+string = ${ "\"" ~ str_inner ~ "\"" }
+str_inner = { char* }
+char = _{ !("\"" ~ WHITESPACE* ~ (s | e | number | symbol | string)) ~ ANY }
+
+s = _{ "(" }
+e = _ { ")" }
+
+WHITESPACE = _{ " " | "\t" | "\n" | "\r" }

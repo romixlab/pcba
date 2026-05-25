@@ -4,6 +4,8 @@ use clap::Parser;
 
 mod cli;
 mod commands;
+mod format;
+mod util;
 
 fn main() -> Result<()> {
     let cli = cli::Cli::parse();
