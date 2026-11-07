@@ -10,5 +10,7 @@
   coordinates from the auxiliary origin (CSV too); drill table; all as JSON and in a Typst document.
 - 📋 FAB-4 variants: DNP per assembly variant (KiCad 10 variants or mx3 once its BOM tooling is reworked); today the
   footprint's own `dnp` attribute decides.
-- 📋 FAB-5 outline-aware-labels: leaders and labels that also avoid the board outline and holes.
+- ✅ FAB-5 outline-aware-labels: references outside their part keep clear of the board outline line, holes, test
+  point and fiducial symbols (`edge_gap`), take a spot on the board over one off it at the same distance, and
+  take a spot whose leader crosses no other label, leader or part body over a nearer one that does.
 - 📋 FAB-6 detail-views: zoomed detail views for clusters too dense for leaders.

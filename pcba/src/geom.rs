@@ -151,3 +151,112 @@ pub fn arc_points(a: (f64, f64), m: (f64, f64), b: (f64, f64), n: usize) -> Vec<
         })
         .collect()
 }
+
+/// A straight piece of a line, mm
+pub type Seg = ((f64, f64), (f64, f64));
+
+/// The shape as straight pieces (arcs, circles and curves as short chords); closed shapes come back closed
+pub fn segments(g: &Geom) -> Vec<Seg> {
+    let chain = |ps: &[(f64, f64)]| ps.windows(2).map(|w| (w[0], w[1])).collect::<Vec<_>>();
+    match g {
+        Geom::Line(a, b) => vec![(pt(*a), pt(*b))],
+        Geom::Rect(a, b) => {
+            let (a, b) = (pt(*a), pt(*b));
+            chain(&[a, (b.0, a.1), b, (a.0, b.1), a])
+        }
+        Geom::Circle { center, radius } => {
+            let (c, r) = (pt(*center), mm(*radius));
+            let ps: Vec<_> = (0..=48)
+                .map(|i| {
+                    let t = std::f64::consts::TAU * i as f64 / 48.0;
+                    (c.0 + r * t.cos(), c.1 + r * t.sin())
+                })
+                .collect();
+            chain(&ps)
+        }
+        Geom::Arc { start, mid, end } => chain(&arc_points(pt(*start), pt(*mid), pt(*end), 24)),
+        Geom::Poly(ps) => {
+            let mut ps: Vec<_> = ps.iter().map(|p| pt(*p)).collect();
+            if let Some(&first) = ps.first() {
+                ps.push(first);
+            }
+            chain(&ps)
+        }
+        Geom::Bezier(ps) => {
+            let [p0, p1, p2, p3] = ps.map(pt);
+            let at = |t: f64| {
+                let u = 1.0 - t;
+                let (a, b, c, d) = (u * u * u, 3.0 * u * u * t, 3.0 * u * t * t, t * t * t);
+                (
+                    a * p0.0 + b * p1.0 + c * p2.0 + d * p3.0,
+                    a * p0.1 + b * p1.1 + c * p2.1 + d * p3.1,
+                )
+            };
+            chain(&(0..=24).map(|i| at(i as f64 / 24.0)).collect::<Vec<_>>())
+        }
+    }
+}
+
+/// Whether the segment touches the inside of the box
+pub fn seg_hits_rect(s: Seg, r: &Rect) -> bool {
+    if r.is_empty() {
+        return false;
+    }
+    // Liang-Barsky clipping of the segment against the box
+    let ((x0, y0), (x1, y1)) = s;
+    let (dx, dy) = (x1 - x0, y1 - y0);
+    let (mut t0, mut t1) = (0.0f64, 1.0f64);
+    for (p, q) in [
+        (-dx, x0 - r.x0),
+        (dx, r.x1 - x0),
+        (-dy, y0 - r.y0),
+        (dy, r.y1 - y0),
+    ] {
+        if p == 0.0 {
+            if q < 0.0 {
+                return false;
+            }
+        } else {
+            let t = q / p;
+            if p < 0.0 {
+                t0 = t0.max(t);
+            } else {
+                t1 = t1.min(t);
+            }
+            if t0 > t1 {
+                return false;
+            }
+        }
+    }
+    true
+}
+
+/// Whether two segments cross (touching at an end does not count)
+pub fn segs_cross(a: Seg, b: Seg) -> bool {
+    let orient = |p: (f64, f64), q: (f64, f64), r: (f64, f64)| {
+        (q.0 - p.0) * (r.1 - p.1) - (q.1 - p.1) * (r.0 - p.0)
+    };
+    let (d1, d2) = (orient(b.0, b.1, a.0), orient(b.0, b.1, a.1));
+    let (d3, d4) = (orient(a.0, a.1, b.0), orient(a.0, a.1, b.1));
+    d1 * d2 < 0.0 && d3 * d4 < 0.0
+}
+
+/// Whether a circle comes closer than its radius to the box
+pub fn circle_hits_rect(c: (f64, f64), r: f64, b: &Rect) -> bool {
+    let n = b.nearest(c);
+    (n.0 - c.0).powi(2) + (n.1 - c.1).powi(2) < r * r
+}
+
+/// Whether `p` is inside the closed outline made of `segs` (even-odd rule, so cut-outs count as outside)
+pub fn inside(segs: &[Seg], p: (f64, f64)) -> bool {
+    let mut odd = false;
+    for &((x0, y0), (x1, y1)) in segs {
+        if (y0 > p.1) != (y1 > p.1) {
+            let x = x0 + (p.1 - y0) / (y1 - y0) * (x1 - x0);
+            if x > p.0 {
+                odd = !odd;
+            }
+        }
+    }
+    odd
+}

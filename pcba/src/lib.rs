@@ -45,7 +45,7 @@ pub fn fab(board: &Board, stem: &str, settings: &FabSettings) -> FabResult {
         if parts.is_empty() {
             continue;
         }
-        let (labels, st) = place::place(&parts, settings);
+        let (labels, st) = place::place(board, &parts, settings);
         stats[i] = Some(st);
         let name = format!(
             "{stem}_assembly_{}.svg",

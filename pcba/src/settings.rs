@@ -20,6 +20,8 @@ pub struct FabSettings {
     pub callout_gap: f64,
     /// How far from its part a reference placed outside may go
     pub callout_reach: f64,
+    /// Gap a reference placed outside keeps from the board outline line, holes, test point and fiducial symbols
+    pub edge_gap: f64,
     /// Margin around the board on each page
     pub margin: f64,
     /// Line width of the board outline
@@ -46,6 +48,7 @@ impl Default for FabSettings {
             callout_text: 0.7,
             callout_gap: 0.25,
             callout_reach: 8.0,
+            edge_gap: 0.15,
             margin: 6.0,
             outline_width: 0.2,
             body_width: 0.08,

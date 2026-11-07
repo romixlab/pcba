@@ -46,9 +46,17 @@ pub fn fab(
     for (side, s) in [("top", res.front), ("bottom", res.back)] {
         if let Some(s) = s {
             println!(
-                "{side}: {} references inside their part, {} outside with a leader{}",
+                "{side}: {} references inside their part, {} outside with a leader{}{}",
                 s.inside,
                 s.outside,
+                if s.crossings > 0 {
+                    format!(
+                        ", {} cross another label, leader or part (no crossing-free spot within reach)",
+                        s.crossings
+                    )
+                } else {
+                    String::new()
+                },
                 if s.collisions > 0 {
                     format!(
                         ", {} overlap something (no free spot within reach)",
@@ -94,6 +102,7 @@ fn toml_defaults() -> String {
         ("callout_text", d.callout_text),
         ("callout_gap", d.callout_gap),
         ("callout_reach", d.callout_reach),
+        ("edge_gap", d.edge_gap),
         ("margin", d.margin),
         ("outline_width", d.outline_width),
         ("body_width", d.body_width),
