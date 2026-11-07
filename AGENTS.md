@@ -9,8 +9,8 @@ Opinionated PCB tooling for KiCad boards. A Cargo workspace:
 - `pcba_cli` (binary `pcba`): `pcba new` (board folder structure) and `pcba fab` (assembly drawing).
 - `pcbapy/`: a Python Gerber renderer (pygerber), separate from the Rust crates.
 
-KiCad files are read with better_erc's reader (git dependency by tag in the workspace `Cargo.toml`); bump the tag
-there when a reader fix lands in better_erc. Dependencies are pure Rust with `default-features = false`.
+KiCad files are read with better_erc's reader (git dependency in the workspace `Cargo.toml`, by release tag, or by
+commit while a needed fix waits for its release); move the pin there when a reader fix lands in better_erc. Dependencies are pure Rust with `default-features = false`.
 
 ## Commands
 

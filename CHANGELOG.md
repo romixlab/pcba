@@ -17,5 +17,7 @@
 
 ### Changed
 
+- better_erc pinned at `a1dadec`, whose board reader fills each footprint's pads (IMP-14); pcba's own grouping of
+  the pads by footprint is gone.
 - A Cargo workspace: the library `pcba` and the CLI `pcba_cli` (binary still `pcba`).
 - `place::place` takes the board too (its outline and holes): `place(&board, &parts, &settings)`.

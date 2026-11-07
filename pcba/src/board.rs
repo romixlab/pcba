@@ -103,13 +103,9 @@ impl Board {
         }
         let mut parts = Vec::new();
         let mut holes = Vec::new();
-        // the reader links each pad to its footprint (Footprint::pads stays empty)
-        let mut pads_of: Vec<Vec<&Pad>> = vec![Vec::new(); layout.footprints.len()];
-        for pad in &layout.pads {
-            pads_of[pad.footprint.index()].push(pad);
-        }
-        for (fi, fp) in layout.footprints.iter().enumerate() {
-            let fp_pads = &pads_of[fi];
+        for fp in &layout.footprints {
+            let fp_pads: Vec<&Pad> = fp.pads.iter().map(|&p| layout.pad(p)).collect();
+            let fp_pads = &fp_pads;
             for pad in fp_pads {
                 let Some(drill) = pad.drill else { continue };
                 if pad.kind != "thru_hole" && pad.kind != "np_thru_hole" {
