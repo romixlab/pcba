@@ -1,0 +1,14 @@
+[package]
+name = "pcba"
+description = "PCB assembly outputs from KiCad boards: assembly drawings with fitted references, DNP, test point and drill tables"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+erc_kicad.workspace = true
+erc_model.workspace = true
+serde = { version = "1", default-features = false, features = ["derive", "std"] }
+serde_json = { version = "1", default-features = false, features = ["std"] }
+toml = { version = "0.9", default-features = false, features = ["parse", "serde", "std"] }

@@ -1,10 +1,10 @@
 use crate::util::read_with_unknown_encoding;
 use anyhow::{Error, Result};
+use lexpr::Value;
 use pest::Parser;
 use pest_derive::Parser;
 use std::collections::{HashMap, HashSet};
 use std::path::Path;
-use lexpr::Value;
 
 pub struct KicadFile {
     pub datasheet_urls: Vec<String>,
@@ -55,12 +55,15 @@ fn extract_links(v: &Value, urls: &mut HashSet<String>) {
 
 #[cfg(test)]
 mod tests {
-    use std::path::Path;
     use crate::format::kicad::load_kicad_raw;
+    use std::path::Path;
 
     #[test]
     fn can_read_kicad_schematic() {
-        let path = Path::new("test_input/cannify_micro.kicad_sch");
+        let path = Path::new(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../test_input/cannify_micro.kicad_sch"
+        ));
         let file = load_kicad_raw(path).unwrap();
         println!("{} {:?}", file.datasheet_urls.len(), file.datasheet_urls);
     }

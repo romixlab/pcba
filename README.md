@@ -12,6 +12,10 @@
 * File names must contain a prefix: `<prefix>_<board_name>`, e.g., `errata_b123a.md`, to facilitate searching and provide clear meaning when multiple files are open.
 * Lower case used for all file and folder names, for no other reason, but making rules less ambiguous.
 
+## Assembly drawings
+
+`pcba fab board.kicad_pcb` writes the assembly drawing into `fab/` beside the board: a page per side with every reference fitted inside its part (or outside with a leader where it cannot fit), DNP parts crossed out, test points and fiducials marked, a drill map, and the tables (fitted parts, DNP, test points with coordinates, drills). `typst compile fab/<board>_assembly.typ` (or `tpm doc build`) makes the PDF. Settings: `pcba fab --show-settings > pcba.toml` beside the board, then edit.
+
 ## Features:
 
 * Create a [folder structure](https://github.com/romixlab/pcba/wiki/Folder-structure) for KiCad project

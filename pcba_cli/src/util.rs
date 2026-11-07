@@ -1,8 +1,8 @@
 use anyhow::Result;
+use chardetng::{Iso2022JpDetection, Utf8Detection};
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
-use chardetng::{Iso2022JpDetection, Utf8Detection};
 
 pub fn read_with_unknown_encoding(path: &Path) -> Result<String> {
     let mut file = File::open(path)?;
