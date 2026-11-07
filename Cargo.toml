@@ -9,8 +9,8 @@ authors = ["Roman Isaikin <romix.lab@gmail.com>"]
 license = "MIT"
 
 [workspace.dependencies]
-erc_kicad = { git = "https://github.com/romixlab/better_erc", rev = "a1dadec" }
-erc_model = { git = "https://github.com/romixlab/better_erc", rev = "a1dadec" }
+erc_kicad = { git = "https://github.com/romixlab/better_erc" }
+erc_model = { git = "https://github.com/romixlab/better_erc" }
 
 [profile.dev]
 split-debuginfo = "unpacked"
