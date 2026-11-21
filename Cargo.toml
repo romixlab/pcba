@@ -13,6 +13,7 @@ erc_kicad = { git = "https://github.com/romixlab/better_erc" }
 erc_model = { git = "https://github.com/romixlab/better_erc" }
 
 [profile.dev]
+debug = false
 split-debuginfo = "unpacked"
 
 [profile.test]
