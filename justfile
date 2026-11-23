@@ -13,4 +13,4 @@ install:
 
 # assembly drawing of B153 into its fab/ folder (example)
 fab-b153:
-    cargo run -q -p pcba_cli -- fab ../hw/b153_typec_serial/source/b153a/b153a_typec_serial.kicad_pcb
+    cargo run -q -p pcba_cli -- fab ../hw/b153_portwright/source/b153a/b153a_portwright.kicad_pcb
